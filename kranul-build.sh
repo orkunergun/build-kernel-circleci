@@ -280,7 +280,7 @@ patch_glibc()
   fi
 }
 
-# Function to upload kernel to telegram
+# Function to upload kernel
 push()
 {
   cd ${AnyKernelPath}
@@ -329,6 +329,12 @@ regen_config()
   cp out/.config arch/${DeviceArch}/configs/${DefConfig}
   git add arch/${DeviceArch}/configs/${DefConfig}
   git commit -m "defconfig: Regenerate"
+}
+
+upload()
+{
+  cd "${AnyKernelPath}"
+  ID="$(curl -sT "${1}" https://pixeldrain.com/api/file/ | grep -o '"id":"[^"]*"' | awk -F'"' '{print $4}')" && echo "Successfully uploaded the kernel! Link: https://pixeldrain.com/u/${ID}"
 }
 
 #####################
