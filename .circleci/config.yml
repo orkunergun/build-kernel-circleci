@@ -38,8 +38,8 @@ jobs:
             git config --global user.email "${CIRCLE_PROJECT_USERNAME}@gmail.com"
             git clone ${KERNEL_REPO} -b ${KERNEL_BRANCH} --depth=500 kernel
           environment:
-            KERNEL_REPO: https://github.com/xiaomi-begonia-dev/android_kernel_xiaomi_mt6785
-            KERNEL_BRANCH: aosp-13
+            KERNEL_REPO: "https://github.com/xiaomi-begonia-dev/android_kernel_xiaomi_mt6785"
+            KERNEL_BRANCH: "aosp-13"
       - run:
           name: Build
           command: |
@@ -49,9 +49,3 @@ jobs:
             wget https://raw.githubusercontent.com/MrErenK/build-kernel-circleci/main/KSU.patch
             echo "Building kernel"
             ./kranul-build.sh
-      - run:
-          name: Upload
-          command: |
-            cd $CIRCLE_WORKING_DIRECTORY/kernel
-            wget https://raw.githubusercontent.com/As9124k82134/pdup/master/pdup && chmod +x pdup
-            ./pdup builds/*.zip
