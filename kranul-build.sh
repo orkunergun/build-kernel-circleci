@@ -235,9 +235,16 @@ function kernelsu() {
     fi
 }
 
+# Upload function
 function upload() {
     cd ${AnyKernelPath}
-    ID="$(curl -sT "${1}" https://pixeldrain.com/api/file/ | grep -o '"id":"[^"]*"' | awk -F'"' '{print $4}')" && echo "Successfully uploaded the kernel! Link: https://pixeldrain.com/u/${ID}"
+    RESPONSE=$(curl -sT "$1" https://pixeldrain.com/api/file/)d
+    ID=$(echo "$RESPONSE" | grep -o '"id":"[^"]*"' | awk -F'"' '{print $4}')
+    if [ -n "$ID" ]; then
+        echo "Successfully uploaded the kernel! Link: https://pixeldrain.com/u/${ID}"
+    else
+        echo "Failed to upload the kernel."
+    fi
 }
 
 getclang
