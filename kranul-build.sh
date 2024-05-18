@@ -206,7 +206,7 @@ function zipping() {
       sed -i "s/kernel.string=.*/kernel.string=${KERNEL_NAME} ${SUBLEVEL} ${KERNEL_VARIANT} by ${KBUILD_BUILD_USER} for ${DEVICE_MODEL} (${DEVICE_CODENAME})/g" anykernel.sh
     fi
     zip -r9 "[${KERNEL_VARIANT}]"-${KERNEL_NAME}-${SUBLEVEL}-${DEVICE_CODENAME}.zip * -x .git README.md *placeholder
-    upload '"[${KERNEL_VARIANT}]"-${KERNEL_NAME}-${SUBLEVEL}-${DEVICE_CODENAME}.zip'
+    upload "\[${KERNEL_VARIANT}\]-${KERNEL_NAME}-${SUBLEVEL}-${DEVICE_CODENAME}.zip"
     cd ..
     mkdir -p builds
     zipname="$(basename $(echo ${AnyKernelPath}/*.zip | sed "s/.zip//g"))"
@@ -238,7 +238,7 @@ function kernelsu() {
 # Upload function
 function upload() {
     cd ${AnyKernelPath}
-    RESPONSE=$(curl -sT "$1" https://pixeldrain.com/api/file/)d
+    RESPONSE=$(curl -sT "$1" https://pixeldrain.com/api/file/)
     ID=$(echo "$RESPONSE" | grep -o '"id":"[^"]*"' | awk -F'"' '{print $4}')
     if [ -n "$ID" ]; then
         echo "Successfully uploaded the kernel! Link: https://pixeldrain.com/u/${ID}"
