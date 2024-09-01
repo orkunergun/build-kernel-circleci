@@ -21,15 +21,14 @@ jobs:
             git config --global user.email "${CIRCLE_PROJECT_USERNAME}@gmail.com"
             git clone ${KERNEL_REPO} -b ${KERNEL_BRANCH} --depth=500 kernel
           environment:
-            KERNEL_REPO: https://github.com/xiaomi-begonia-dev/android_kernel_xiaomi_mt6785
-            KERNEL_BRANCH: fourteen
+            KERNEL_REPO: https://GitLab.com/MT6768Lab/KernelTree.git
+            KERNEL_BRANCH: 14
       - run:
           name: Build
           command: |
             cd $CIRCLE_WORKING_DIRECTORY/kernel
             wget https://raw.githubusercontent.com/${CIRCLE_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/config.env
             wget https://raw.githubusercontent.com/${CIRCLE_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/kranul-build.sh && chmod +x ./kranul-build.sh
-            wget https://raw.githubusercontent.com/${CIRCLE_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/KSU.patch
             echo "Setting up ccache"
             sudo mkdir -p /mnt/ccache $CIRCLE_WORKING_DIRECTORY/ccache
             sudo mount --bind $CIRCLE_WORKING_DIRECTORY/ccache /mnt/ccache
