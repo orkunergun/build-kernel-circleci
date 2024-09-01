@@ -87,6 +87,7 @@ function getclang() {
       wget -q ${LiliumLatest} -O "lilium-clang.tar.gz"
       tar -xf lilium-clang.tar.gz
       rm -f lilium-clang.tar.gz
+      cd ..
       ClangPath="${MainClangPath}"-lilium
       export PATH="${ClangPath}/bin:${PATH}"
       patch_glibc "${ClangPath}"
