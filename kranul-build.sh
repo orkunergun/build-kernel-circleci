@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # Copyright (C) 2022-2023 Neebe3289 <neebexd@gmail.com>
+# Copyright (C) 2023-2024 MrErenK <akbaseren4751@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,11 +37,7 @@ function getclang() {
       git clone https://gitlab.com/Panchajanya1999/azure-clang clang-azure --depth=1
       ClangPath="${MainClangPath}"-azure
       export PATH="${ClangPath}/bin:${PATH}"
-      cd ${ClangPath}
-      curl -LOk "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
-      chmod +x antman
-      ./antman --patch=glibc
-      cd ..
+      patch_glibc "${ClangPath}"
     else
       echo "[!] Clang already exists. Skipping..."
       ClangPath="${MainClangPath}"-azure
@@ -52,11 +49,7 @@ function getclang() {
       mkdir -p "${MainClangPath}"-neutron
       ClangPath="${MainClangPath}"-neutron
       export PATH="${ClangPath}/bin:${PATH}"
-      cd ${ClangPath}
-      curl -LOk "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
-      chmod +x antman && ./antman -S
-      ./antman --patch=glibc
-      cd ..
+      patch_glibc "${ClangPath}"
     else
       echo "[!] Clang already exists. Skipping..."
       ClangPath="${MainClangPath}"-neutron
@@ -68,11 +61,7 @@ function getclang() {
       git clone https://github.com/kdrag0n/proton-clang clang-proton --depth=1
       ClangPath="${MainClangPath}"-proton
       export PATH="${ClangPath}/bin:${PATH}"
-      cd ${ClangPath}
-      curl -LOk "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
-      chmod +x antman
-      ./antman --patch=glibc
-      cd ..
+      patch_glibc "${ClangPath}"
     else
       echo "[!] Clang already exists. Skipping..."
       ClangPath="${MainClangPath}"-proton
@@ -85,13 +74,11 @@ function getclang() {
       cd clang-zyc
       wget -q $(curl -k https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt 2>/dev/null) -O "zyc-clang.tar.gz"
       tar -xf zyc-clang.tar.gz
-      curl -LOk "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
-      chmod +x antman
-      ./antman --patch=glibc
       rm -f zyc-clang.tar.gz
+      cd ..
       ClangPath="${MainClangPath}"-zyc
       export PATH="${ClangPath}/bin:${PATH}"
-      cd ..
+      patch_glibc "${ClangPath}"
     else
       echo "[!] Clang already exists. Skipping..."
       ClangPath="${MainClangPath}"-zyc
@@ -144,6 +131,14 @@ function updateclang() {
       git pull origin master
       cd ..
   fi
+}
+
+function patch_glibc() {
+  cd $1
+  curl -LOk "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
+  chmod +x antman
+  ./antman --patch=glibc
+  cd -
 }
 
 # Enviromental variable
