@@ -9,10 +9,10 @@ jobs:
       - run:
           name: Setup packages
           command: |
-            sudo DEBIAN_FRONTEND=noninteractive apt-get update -y
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y bc bison build-essential curl ccache coreutils flex g++-multilib gcc-multilib git gnupg \
+            sudo DEBIAN_FRONTEND=noninteractive apt-get update -yqq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -yqq bc bison build-essential curl ccache coreutils flex g++-multilib gcc-multilib git gnupg \
             libxml2 lib32z1-dev liblz4-tool libncurses5-dev lzop zip zlib1g-dev wget libssl-dev libxml2-utils lld gcc-multilib g++-multilib libc6-dev-i386 \
-            lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev unzip ca-certificates rsync python-is-python3 zstd
+            lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev unzip ca-certificates rsync python-is-python3 zstd jq libarchive-tools
       - run:
           name: Clone kernel repo
           command: |
