@@ -200,6 +200,7 @@ export KERNEL_NAME="$(cat "arch/${ARCH}/configs/${DEVICE_DEFCONFIG}" | grep "CON
 export SUBLEVEL="v4.14.$(cat "${MainPath}/Makefile" | grep "SUBLEVEL =" | sed 's/SUBLEVEL = *//g')"
 export IMAGE="${MainPath}/out/arch/${ARCH}/boot/Image.gz-dtb"
 export CORES="$(nproc --all)"
+export DATE="$(date +"%d%m%y-%H%M")"
 
 # Start Compile
 START=$(date +"%s")
@@ -253,6 +254,7 @@ function write_build_info() {
   echo "Build user: ${KBUILD_BUILD_USER}" >>$1.txt
   echo "Device model: ${DEVICE_MODEL}" >>$1.txt
   echo "Device codename: ${DEVICE_CODENAME}" >>$1.txt
+  echo "Date: ${DATE}" >>$1.txt
   msg "Build info for ${KERNEL_ZIP_NAME}:"
   msg "Kernel name: ${KERNEL_NAME}"
   msg "Sublevel: ${SUBLEVEL}"
@@ -260,6 +262,7 @@ function write_build_info() {
   msg "Build user: ${KBUILD_BUILD_USER}"
   msg "Device model: ${DEVICE_MODEL}"
   msg "Device codename: ${DEVICE_CODENAME}"
+  msg "Date: ${DATE}"
 }
 
 function zipping() {
@@ -269,17 +272,14 @@ function zipping() {
   else
     sed -i "s/kernel.string=.*/kernel.string=${KERNEL_NAME} ${SUBLEVEL} ${KERNEL_VARIANT} by ${KBUILD_BUILD_USER} for ${DEVICE_MODEL} (${DEVICE_CODENAME})/g" anykernel.sh || error "Failed to update kernel string in anykernel.sh"
   fi
-  KERNEL_ZIP_NAME="[${KERNEL_VARIANT}]-${KERNEL_NAME}-${SUBLEVEL}-${DEVICE_CODENAME}.zip"
+  KERNEL_ZIP_NAME="[${KERNEL_VARIANT}]-${KERNEL_NAME}-${SUBLEVEL}-${DEVICE_CODENAME}-${DATE}.zip"
   msg "Zipping kernel: ${KERNEL_ZIP_NAME}"
   zip -r9 "${KERNEL_ZIP_NAME}" * -x .git README.md *placeholder || error "Failed to zip kernel"
   mkdir -p ${MainPath}/builds || error "Failed to create builds directory"
-  cp ${AnyKernelPath}/*.zip ${MainPath}/builds || error "Failed to copy zip file to builds directory"
+  cp ${AnyKernelPath}/*.zip ${MainPath}/builds/${KERNEL_ZIP_NAME} || error "Failed to copy zip file to builds directory"
   write_build_info ${MainPath}/builds/${KERNEL_ZIP_NAME}
   upload "${MainPath}/builds/${KERNEL_ZIP_NAME}" || error "Failed to upload kernel"
   cd ..
-  mkdir -p builds || error "Failed to create builds directory"
-  zipname="$(basename $(echo ${AnyKernelPath}/*.zip | sed "s/.zip//g"))"
-  cp ${AnyKernelPath}/*.zip ./builds/${zipname}-$DATE.zip || error "Failed to copy zip file to builds directory"
   cleanup
 }
 
