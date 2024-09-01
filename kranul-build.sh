@@ -242,7 +242,7 @@ function kernelsu() {
         git apply KSU.patch
       fi
       KERNELSU_VERSION="$((10000 + $(cd KernelSU && git rev-list --count HEAD) + 200))"
-      git submodule update --init; cd ${MainPath}/KernelSU; git pull origin main; cd ..
+      cd ${MainPath}
     fi
 }
 
