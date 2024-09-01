@@ -79,6 +79,17 @@ function getclang() {
       ClangPath="${MainClangPath}"-zyc
       export PATH="${ClangPath}/bin:${PATH}"
       patch_glibc "${ClangPath}"
+    elif [ "${ClangName}" = "lilium" ]; then
+      echo "[!] Clang is set to lilium, cloning it..."
+      mkdir -p ${MainClangPath}-lilium
+      cd ${MainClangPath}-lilium
+      LiliumLatest=$(curl -s https://api.github.com/repos/liliumproject/clang/releases/latest | grep "download_url" | cut -d '"' -f 4)
+      wget -q ${LiliumLatest} -O "lilium-clang.tar.gz"
+      tar -xf lilium-clang.tar.gz
+      rm -f lilium-clang.tar.gz
+      ClangPath="${MainClangPath}"-lilium
+      export PATH="${ClangPath}/bin:${PATH}"
+      patch_glibc "${ClangPath}"
     else
       echo "[!] Clang already exists. Skipping..."
       ClangPath="${MainClangPath}"-zyc
