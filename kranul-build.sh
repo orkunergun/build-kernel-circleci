@@ -106,6 +106,7 @@ function getclang() {
   fi
 }
 
+# Update clang function
 function updateclang() {
   [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
   if [ "${ClangName}" = "neutron" ] || [ "${ClangName}" = "" ]; then
@@ -247,13 +248,11 @@ function kernelsu() {
 # Upload function
 function upload() {
     cd ${AnyKernelPath}
-    RESPONSE=$(curl -sT "$1" https://pixeldrain.com/api/file/)
-    ID=$(echo "$RESPONSE" | grep -o '"id":"[^"]*"' | awk -F'"' '{print $4}')
-    if [ -n "$ID" ]; then
-        echo "Successfully uploaded the kernel! Link: https://pixeldrain.com/u/${ID}"
-    else
-        echo "Failed to upload the kernel."
-    fi
+    set +o history
+    RESPONSE=$(curl -X POST https://storage.erensprojects.web.tr/api/upload -H "x-api-key: ${STORAGE_API_KEY}" -F "files=@$1")
+    set -o history
+    URL=$(echo $RESPONSE | jq -r '.files[0].url')
+    echo "File uploaded successfully. Download URL: $URL"
 }
 
 getclang
