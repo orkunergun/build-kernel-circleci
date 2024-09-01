@@ -79,7 +79,13 @@ function getclang() {
       ClangPath="${MainClangPath}"-zyc
       export PATH="${ClangPath}/bin:${PATH}"
       patch_glibc "${ClangPath}"
-    elif [ "${ClangName}" = "lilium" ]; then
+    else
+      echo "[!] Clang already exists. Skipping..."
+      ClangPath="${MainClangPath}"-zyc
+      export PATH="${ClangPath}/bin:${PATH}"
+    fi
+  elif [ "${ClangName}" = "lilium" ]; then
+    if [ ! -f "${MainClangPath}-lilium/bin/clang" ]; then
       echo "[!] Clang is set to lilium, cloning it..."
       mkdir -p ${MainClangPath}-lilium
       cd ${MainClangPath}-lilium
@@ -93,14 +99,14 @@ function getclang() {
       patch_glibc "${ClangPath}"
     else
       echo "[!] Clang already exists. Skipping..."
-      ClangPath="${MainClangPath}"-zyc
+      ClangPath="${MainClangPath}"-lilium
       export PATH="${ClangPath}/bin:${PATH}"
     fi
   else
     echo "[!] Incorrect clang name. Check config.env for clang names."
     exit 1
   fi
-  if [ ! -f '${MainClangPath}-${ClangName}/bin/clang' ]; then
+  if [ ! -f "${MainClangPath}-${ClangName}/bin/clang" ]; then
     export KBUILD_COMPILER_STRING="$(${MainClangPath}-${ClangName}/bin/clang --version | head -n 1)"
   else
     export KBUILD_COMPILER_STRING="Unknown"
