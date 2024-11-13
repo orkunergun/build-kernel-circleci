@@ -315,14 +315,9 @@ function kernelsu() {
 function upload() {
   msg "Uploading file: $1"
   cd ${AnyKernelPath}
-  [ -z "$STORAGE_API_KEY" ] && error "STORAGE_API_KEY is not set"
-  RESPONSE=$(curl -X POST https://storage.erensprojects.web.tr/api/upload -H "x-api-key: ${STORAGE_API_KEY}" -F "files=@$1") || error "Failed to upload file"
-  URL=$(echo $RESPONSE | jq -r '.files[0].url')
-  if [ -z "$URL" ]; then
-    error "Failed to retrieve upload URL"
-  else
-    success "File uploaded successfully. Download URL: $URL"
-  fi
+  wget "https://github.com/Sushrut1101/GoFile-Upload/raw/refs/heads/master/upload.sh" -O upload
+  chmod +x upload
+  ./upload "$1"
 }
 
 getclang
