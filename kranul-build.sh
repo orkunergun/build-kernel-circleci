@@ -300,10 +300,7 @@ function kernelsu() {
     KERNEL_VARIANT="${KERNEL_VARIANT}-KernelSU"
     if [ ! -f "${MainPath}/KernelSU/LICENSE" ]; then
       cd ${MainPath}
-      curl -LSsk "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5 || error "Failed to setup KernelSU"
-      cd KernelSU
-      git revert --no-commit 898e9d4f8ca9b2f46b0c6b36b80a872b5b88d899 || msg "Warning: Failed to revert commit 898e9d4f8ca9b2f46b0c6b36b80a872b5b88d899"
-      cd ..
+      curl -LSsk "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash - || error "Failed to setup KernelSU"
       sed -i "s/CONFIG_KSU=n/CONFIG_KSU=y/g" arch/${ARCH}/configs/${DEVICE_DEFCONFIG} || msg "Warning: Failed to apply KSU patch!"
     fi
     KERNELSU_VERSION="$((10000 + $(cd KernelSU && git rev-list --count HEAD) + 200))"
